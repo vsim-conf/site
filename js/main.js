@@ -16,7 +16,7 @@ jQuery(document).ready(function($) {
 	//COUNTDOWN TIMER
 	var newYear = new Date(); 
     newYear = new Date(newYear.getFullYear() + 1, 1 - 1, 1); 
-    $('#countdown').countdown({until: new Date(2024, 9-1, 10, 9, 0, 0)}); // enter event day
+    $('#countdown').countdown({until: new Date(2024, 9-1, 11, 9, 0, 0)}); // enter event day
     
     $('#removeCountdown').toggle(
         function() {
