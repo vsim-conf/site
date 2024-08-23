@@ -1262,18 +1262,20 @@
 
 		</script>
 
-      <script>
+<script>
 // Event schedule downloader, from bace bogo :)
 var text = '';
 var elements = document.querySelectorAll("div[id^='day']");
 
 for (var i = 1; i < elements.length; i++) {
-    // Get the day ID and add an empty line before it (except the first one)
+    // Add two empty lines before each DAY* line except for the first one
     if (i > 1) {
-        text += '\n'; // Ensure one empty line before each DAY* line except for the first one
+        text += '\n\n';
     }
-    text += elements[i].id.toUpperCase() + '\n\n';
-    
+
+    // Add the DAY* header
+    text += elements[i].id.toUpperCase().trim() + '\n\n';
+
     // Find all the events within the current day's div
     var events = elements[i].querySelectorAll(".event"); // Assuming events are wrapped in a div or span with class "event"
 
@@ -1281,10 +1283,10 @@ for (var i = 1; i < elements.length; i++) {
         // Extract time and location for each event
         var time = event.querySelector(".time") ? event.querySelector(".time").innerText.trim() : "";
         var location = event.querySelector(".name") ? event.querySelector(".name").innerText.trim() : "";
-        
-        // Only add if time and location exist
+
+        // Add an empty line before each time and location
         if (time && location) {
-            text += time + " " + location + '\n';  // Concatenate time and location with a space in between
+            text += '\n' + time + " " + location + '\n';
         }
 
         // Extract and add the description of the event (if any)
@@ -1293,8 +1295,8 @@ for (var i = 1; i < elements.length; i++) {
             text += description + '\n';
         }
     });
-    
-    text += '\n';  // Add a blank line between sections for readability
+
+    text += '\n';  // Ensure a blank line between sections for readability
 }
 
 function download(data, filename, type) {
