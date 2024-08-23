@@ -1267,38 +1267,34 @@
 var text = '';
 var elements = document.querySelectorAll("div[id^='day']");
 
+// Loop through each element
 for (var i = 1; i < elements.length; i++) {
-    // Add two empty lines before each DAY* line except for the first one
+    // Get the inner HTML and parse it into DOM elements
+    var innerElements = elements[i].querySelectorAll('.time, .name');
+    
+    // Add the day ID with an empty line before it
     if (i > 1) {
-        text += '\n\n';
+        text += '\n'; // Ensure one empty line before each DAY* line except for the first one
     }
+    text += elements[i].id.toUpperCase() + '\n\n';
 
-    // Add the DAY* header
-    text += elements[i].id.toUpperCase().trim() + '\n\n';
+    var currentText = '';
 
-    // Find all the events within the current day's div
-    var events = elements[i].querySelectorAll(".event"); // Assuming events are wrapped in a div or span with class "event"
-
-    events.forEach(function(event) {
-        // Extract time and location for each event
-        var time = event.querySelector(".time") ? event.querySelector(".time").innerText.trim() : "";
-        var location = event.querySelector(".name") ? event.querySelector(".name").innerText.trim() : "";
-
-        // Add an empty line before each time and location
-        if (time && location) {
-            text += '\n' + time + " " + location + '\n';
-        }
-
-        // Extract and add the description of the event (if any)
-        var description = event.querySelector(".description") ? event.querySelector(".description").innerText.trim() : "";
-        if (description) {
-            text += description + '\n';
+    // Iterate over each time and name element
+    innerElements.forEach(function(el) {
+        if (el.classList.contains('time')) {
+            // Append the time followed by a space
+            currentText += el.innerText + ' ';
+        } else if (el.classList.contains('name')) {
+            // Append the name after the time on the same line
+            currentText += el.innerText + '\n';
+            text += currentText;  // Write the full line with time and location to the text
+            currentText = '';     // Reset for the next entry
         }
     });
-
-    text += '\n';  // Ensure a blank line between sections for readability
 }
 
+// Download function remains the same
 function download(data, filename, type) {
     var file = new Blob([data], {type: type});
     if (window.navigator.msSaveOrOpenBlob) // IE10+
@@ -1317,8 +1313,6 @@ function download(data, filename, type) {
     }
 }
 </script>
-
-
 
 		</body>
 </html>
