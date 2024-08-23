@@ -1261,9 +1261,8 @@
 		ga('send', 'pageview');
 
 		</script>
-
 <script>
-// Event schedule downloader, from bace bogo :), later upgraded by Junior
+// Event schedule downloader, from bace bogo :)
 
 // Extract dates and weekdays from the calendar
 var days = document.querySelectorAll("#days .item");
@@ -1285,11 +1284,7 @@ for (var i = 0; i < elements.length; i++) {
     var lines = elements[i].querySelectorAll('.time, .name, .description, p');
 
     // Add the day ID with the corresponding calendar date and weekday
-    if (i > 0) {
-        text += '\n'; // Ensure one empty line before each DAY* line except for the first one
-    }
-    
-    if (calendar[i]) { // Check if the calendar has a corresponding date
+    if (calendar[i]) { // Ensure we have a corresponding calendar date
         text += calendar[i].weekday.toUpperCase() + ', ' + calendar[i].date + '\n\n';
     } else {
         text += elements[i].id.toUpperCase() + '\n\n'; // Fallback to DAY1, DAY2, etc.
@@ -1299,22 +1294,22 @@ for (var i = 0; i < elements.length; i++) {
     var currentTime = '';
     var currentLocation = '';
 
-    // Iterate over each line
+    // Iterate over each line and trim leading/trailing spaces
     lines.forEach(function(line) {
+        var trimmedText = line.innerText.trim(); // Trim all text
         if (line.classList.contains('time')) {
-            currentTime = line.innerText.trim();
-            text += '\n' + currentTime; // Add an extra blank line before the time
+            currentTime = trimmedText;
+            text += '\n' + currentTime + ' '; // Add a space after the time
         } else if (line.classList.contains('name')) {
-            currentLocation = line.innerText.trim();
-            text += ' ' + currentLocation + '\n'; // Combine time and location
+            currentLocation = trimmedText;
+            text += currentLocation + '\n'; // Combine time and location
         } else if (line.classList.contains('description')) {
-            var descriptionText = line.innerText.trim();
-            if (descriptionText) {
-                text += descriptionText + '\n'; // Add the description
+            if (trimmedText) {
+                text += trimmedText + '\n'; // Add the description
             }
         } else if (line.tagName.toLowerCase() === 'p') {
             // Handle paragraph with <u> and <br>
-            let innerHTML = line.innerHTML;
+            let innerHTML = line.innerHTML.trim();
             
             // Convert <u> to uppercase text
             innerHTML = innerHTML.replace(/<u>(.*?)<\/u>/g, function(match, p1) {
@@ -1327,6 +1322,9 @@ for (var i = 0; i < elements.length; i++) {
             text += innerHTML.trim() + '\n'; // Add the processed paragraph text
         }
     });
+
+    // Add an extra newline between sections for readability
+    text += '\n';
 }
 
 function download(data, filename, type) {
@@ -1347,7 +1345,6 @@ function download(data, filename, type) {
     }
 }
 </script>
-
 
 		</body>
 </html>
