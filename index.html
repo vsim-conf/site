@@ -1263,36 +1263,46 @@
 
 		</script>
 
-        <script>
-        // Event schedule downloader, from bace bogo :)
-        text = '';
-        var elements = document.querySelectorAll("div[id^='day']");
+       <script>
+// Event schedule downloader, from bace bogo :)
+var text = '';
+var elements = document.querySelectorAll("div[id^='day']");
 
-        for (i=1;i<elements.length;i++) {
-            text += elements[i].id.toUpperCase() + '\n\n';
-            text += elements[i].innerText + '\n\n';
-        }
+for (var i = 1; i < elements.length; i++) {
+    // Get the inner text and split it into lines
+    var lines = elements[i].innerText.split('\n');
+    
+    // Add the day ID to the text
+    text += elements[i].id.toUpperCase() + '\n\n';
+    
+    // Iterate over each line, trimming it and appending it to the text
+    lines.forEach(function(line) {
+        text += line.trim() + '\n';
+    });
+    
+    // Add a blank line between sections for readability
+    text += '\n';
+}
 
+function download(data, filename, type) {
+    var file = new Blob([data], {type: type});
+    if (window.navigator.msSaveOrOpenBlob) // IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    else { // Others
+        var a = document.createElement("a"),
+            url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
+    }
+}
+</script>
 
-        function download(data, filename, type) {
-            var file = new Blob([data], {type: type});
-            if (window.navigator.msSaveOrOpenBlob) // IE10+
-                window.navigator.msSaveOrOpenBlob(file, filename);
-            else { // Others
-                var a = document.createElement("a"),
-                        url = URL.createObjectURL(file);
-                a.href = url;
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                setTimeout(function() {
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);  
-                }, 0); 
-            }
-        }
-
-        </script>
 
 		</body>
 </html>
