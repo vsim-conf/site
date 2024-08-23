@@ -703,8 +703,7 @@
                                         </div>
 										
                                         <div class="description">
-                                            <h3>Social programme</h3>
-						<h3>Working session of the conference</h3>
+                                            <h3>Working session of the conference</h3>
 						<u>Discussion topic: Blockchain Applications and Crypto Markets</u><br>
 	                                        Alternatives to fiat reserve currencies - Georgi Chnakov <br>
 						Blockchain: A trust EBSI framework for new venture financing - Petko Ruskov, Dimitar Yordanov, Malvina Ilieva, Perar Blagov, Milena Stoycheva <br>
@@ -925,7 +924,7 @@
                             </div>
 
                             <!-- DAY 6 -->
-                            <div id="day5" class="item">
+                            <div id="day6" class="item">
                            
                                 <div class="event">
                                     <div class="event-inner">
@@ -1268,24 +1267,34 @@
 var text = '';
 var elements = document.querySelectorAll("div[id^='day']");
 
-// Loop through each element
 for (var i = 1; i < elements.length; i++) {
-    // Get the inner text and split it into lines
-    var lines = elements[i].innerText.split('\n');
-    
-    // Add the day ID with an empty line before it
+    // Get the day ID and add an empty line before it (except the first one)
     if (i > 1) {
         text += '\n'; // Ensure one empty line before each DAY* line except for the first one
     }
     text += elements[i].id.toUpperCase() + '\n\n';
     
-    // Iterate over each line, trimming it and appending non-empty lines to the text
-    lines.forEach(function(line) {
-        var trimmedLine = line.trim();
-        if (trimmedLine) {  // Only add non-empty lines
-            text += trimmedLine + '\n';
+    // Find all the events within the current day's div
+    var events = elements[i].querySelectorAll(".event"); // Assuming events are wrapped in a div or span with class "event"
+
+    events.forEach(function(event) {
+        // Extract time and location for each event
+        var time = event.querySelector(".time") ? event.querySelector(".time").innerText.trim() : "";
+        var location = event.querySelector(".name") ? event.querySelector(".name").innerText.trim() : "";
+        
+        // Only add if time and location exist
+        if (time && location) {
+            text += time + " " + location + '\n';  // Concatenate time and location with a space in between
+        }
+
+        // Extract and add the description of the event (if any)
+        var description = event.querySelector(".description") ? event.querySelector(".description").innerText.trim() : "";
+        if (description) {
+            text += description + '\n';
         }
     });
+    
+    text += '\n';  // Add a blank line between sections for readability
 }
 
 function download(data, filename, type) {
