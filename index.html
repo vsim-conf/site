@@ -1276,11 +1276,11 @@ if (firstDayElement && firstDateElement) {
 
     // Convert the date into a valid Date object
     var [day, month] = firstDate.split(" ");
-    var monthIndex = new Date(Date.parse(month + " 1")).getMonth(); // Get the month index from the month name
-    var startDate = new Date(monthIndex, parseInt(day));
+    var monthIndex = new Date(Date.parse(month + " 1, 2024")).getMonth(); // Get the month index from the month name
+    var startDate = new Date(2024, monthIndex, parseInt(day));
 
-    // Function to format the date
-    function formatDate(date) {
+    // Function to format the date (without the year)
+    function formatDateWithoutYear(date) {
         var options = { weekday: 'long', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('en-US', options);
     }
@@ -1295,8 +1295,8 @@ if (firstDayElement && firstDateElement) {
         // Get the inner text and split it into lines
         var lines = elements[i].innerText.split('\n');
         
-        // Add an additional blank line before each day and the formatted date with an empty line
-        text += '\n\n' + formatDate(currentDate) + '\n\n';
+        // Add an additional blank line before each day and the formatted date (without year)
+        text += '\n\n' + formatDateWithoutYear(currentDate) + '\n\n';
         
         // Iterate over each line, trimming it and appending non-empty lines to the text
         for (var j = 0; j < lines.length; j++) {
