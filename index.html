@@ -1262,68 +1262,43 @@
 
 		</script>
 <script>
-// Event schedule downloader, from bace bogo :) and upgraded by Junior
-var text = 'Vanguard Scientific Instruments in Management\n\n';
+// Event schedule downloader, from bace bogo :)
+var text = 'Vanguard Scientific Instruments in Management\n\n'; // Add the title at the beginning
 
-// Extract the first date from the HTML structure
-var firstDayElement = document.querySelector("#days .item h4.uppercase");
-var firstDateElement = document.querySelector("#days .item h5");
+var elements = document.querySelectorAll("div[id^='day']");
+var daysInfo = document.querySelectorAll("#days .item"); // Select weekday and day info
 
-if (firstDayElement && firstDateElement) {
-    // Extract the weekday and date from the HTML
-    var firstWeekday = firstDayElement.innerText.trim();
-    var firstDate = firstDateElement.innerText.trim();
+// Loop through each element and parse the corresponding date
+for (var i = 1; i < elements.length; i++) {
+    // Get the inner text and split it into lines
+    var lines = elements[i].innerText.split('\n');
+    
+    // Extract the weekday and day (e.g., 'tuesday', '10 September') for the current element
+    var weekday = daysInfo[i - 1].querySelector('h4').innerText.trim();  // Extract the weekday
+    var dayInfo = daysInfo[i - 1].querySelector('h5').innerText.trim();  // Extract the day and month (e.g., '10 September')
 
-    // Get the day and month from the firstDate (e.g., "10 September")
-    var [day, month] = firstDate.split(" ");
-
-    // Create an array of month and weekday names
-    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-    // Convert the month and day to a valid Date object
-    var currentDate = new Date(2024, monthNames.indexOf(month), parseInt(day));
-
-    // Loop through each day element
-    var elements = document.querySelectorAll("div[id^='day']");
-    for (var i = 0; i < elements.length; i++) {
-        // Format the date (weekday, month day) for the current element
-        var formattedDate = `${weekdayNames[currentDate.getDay()]}, ${monthNames[currentDate.getMonth()]} ${currentDate.getDate()}`;
-        text += formattedDate + '\n\n';
-
-        // Get the inner text and split it into lines
-        var lines = elements[i].innerText.split('\n');
-
-        // Iterate over each line, trimming it and appending non-empty lines to the text
-        for (var j = 0; j < lines.length; j++) {
-            var trimmedLine = lines[j].trim();
-            if (trimmedLine) {  // Only add non-empty lines
-                if (trimmedLine.match(/\d{1,2}\.\d{2}/) && j + 1 < lines.length) {
-                    // Insert a blank line before every time
-                    text += '\n';
-
-                    // If the line contains time (e.g., 09.00 - 13.30) and the next line contains a location, append the location after the time
-                    var nextLine = lines[j + 1].trim();
-                    if (nextLine.match(/The conference hall|The Lobby|The Restaurant|Hotels in Ravda|Various locations/)) {
-                        text += trimmedLine + ' ' + nextLine + '\n';
-                        j++;  // Skip the next line as it's already included
-                    } else {
-                        text += trimmedLine + '\n';
-                    }
-                } else {
-                    // Append the rest of the description after the time and location
-                    text += trimmedLine + '\n';
-                }
-            }
-        }
-
-        // Increment the day by 1
-        currentDate.setDate(currentDate.getDate() + 1);
+    // Add two empty lines before each day with the formatted day information
+    if (i > 1) {
+        text += '\n\n'; // Ensure two empty lines before each new day
     }
+    text += weekday.charAt(0).toUpperCase() + weekday.slice(1) + ', ' + dayInfo + '\n\n'; // Capitalize the weekday and add date
+    
+    // Iterate over each line, trimming it and appending non-empty lines to the text
+    lines.forEach(function(line) {
+        var trimmedLine = line.trim();
+        
+        if (trimmedLine.includes(':')) { // Assuming that ".time" sections include a colon (":")
+            text += '\n'; // Add an additional blank line before every .time section
+        }
+        
+        if (trimmedLine) {  // Only add non-empty lines
+            text += trimmedLine + '\n';
+        }
+    });
 }
 
 function download(data, filename, type) {
-    var file = new Blob([data], { type: type });
+    var file = new Blob([data], {type: type});
     if (window.navigator.msSaveOrOpenBlob) // IE10+
         window.navigator.msSaveOrOpenBlob(file, filename);
     else { // Others
@@ -1333,10 +1308,10 @@ function download(data, filename, type) {
         a.download = filename;
         document.body.appendChild(a);
         a.click();
-        setTimeout(function () {
+        setTimeout(function() {
             document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }, 0);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
     }
 }
 </script>
