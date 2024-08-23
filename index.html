@@ -1274,36 +1274,48 @@ if (firstDayElement && firstDateElement) {
     var firstWeekday = firstDayElement.innerText.trim();
     var firstDate = firstDateElement.innerText.trim();
 
-    // Convert the date into a valid Date object
+    // Get the day and month from the firstDate (e.g., "10 September")
     var [day, month] = firstDate.split(" ");
-    var monthIndex = new Date(Date.parse(month + " 1, 2024")).getMonth(); // Get the month index from the month name
-    var startDate = new Date(2024, monthIndex, parseInt(day));
 
-    // Function to format the date (without the year)
-    function formatDateWithoutYear(date) {
-        var options = { weekday: 'long', month: 'long', day: 'numeric' };
-        return date.toLocaleDateString('en-US', options);
+    // Create an array of months to use for date calculation
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var monthIndex = monthNames.indexOf(month);
+
+    // Start date information without a year
+    var startDate = { day: parseInt(day), monthIndex: monthIndex };
+
+    // Function to format the date without the year
+    function formatDateWithoutYear(dateObj) {
+        return `${firstWeekday}, ${monthNames[dateObj.monthIndex]} ${dateObj.day}`;
     }
 
     // Loop through each day element
     var elements = document.querySelectorAll("div[id^='day']");
-    for (var i = 1; i < elements.length; i++) {
-        // Calculate the date for this day based on the start date
-        var currentDate = new Date(startDate);
-        currentDate.setDate(startDate.getDate() + (i - 1));
+    for (var i = 0; i < elements.length; i++) {
+        // Calculate the current day based on the start date (simulating the passage of days)
+        var currentDate = { day: startDate.day + i, monthIndex: startDate.monthIndex };
+        
+        // Adjust the day and month if the day exceeds the month's length
+        if (currentDate.day > 30) { // assuming 30 days for simplicity
+            currentDate.day = currentDate.day - 30;
+            currentDate.monthIndex++;
+        }
+
+        // Add the formatted date without the year
+        text += formatDateWithoutYear(currentDate) + '\n\n';
 
         // Get the inner text and split it into lines
         var lines = elements[i].innerText.split('\n');
-        
-        // Add an additional blank line before each day and the formatted date (without year)
-        text += '\n\n' + formatDateWithoutYear(currentDate) + '\n\n';
-        
+
         // Iterate over each line, trimming it and appending non-empty lines to the text
         for (var j = 0; j < lines.length; j++) {
             var trimmedLine = lines[j].trim();
             if (trimmedLine) {  // Only add non-empty lines
                 if (trimmedLine.match(/\d{1,2}\.\d{2}/) && j + 1 < lines.length) {
-                    // If the line contains time (e.g., 09.00 - 13.30) and the next line contains a location, move the location next to the time
+                    // Insert a blank line before every time
+                    text += '\n';
+
+                    // If the line contains time (e.g., 09.00 - 13.30) and the next line contains a location, append the location after the time
                     var nextLine = lines[j + 1].trim();
                     if (nextLine.match(/The conference hall|The Lobby|The Restaurant|Hotels in Ravda|Various locations/)) {
                         text += trimmedLine + ' ' + nextLine + '\n';
@@ -1312,6 +1324,7 @@ if (firstDayElement && firstDateElement) {
                         text += trimmedLine + '\n';
                     }
                 } else {
+                    // Append the rest of the description after the time and location
                     text += trimmedLine + '\n';
                 }
             }
