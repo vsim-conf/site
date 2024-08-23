@@ -703,7 +703,8 @@
                                         </div>
 										
                                         <div class="description">
-                                            <h3>Working session of the conference</h3>
+                                            <h3>Social programme</h3>
+						<h3>Working session of the conference</h3>
 						<u>Discussion topic: Blockchain Applications and Crypto Markets</u><br>
 	                                        Alternatives to fiat reserve currencies - Georgi Chnakov <br>
 						Blockchain: A trust EBSI framework for new venture financing - Petko Ruskov, Dimitar Yordanov, Malvina Ilieva, Perar Blagov, Milena Stoycheva <br>
@@ -1261,27 +1262,23 @@
 		ga('send', 'pageview');
 
 		</script>
-<script>
-// Event schedule downloader, from bace bogo :)
+
+      <script>
+// Event schedule downloader, from bace bogo :) and upgraded by Junior
 var text = 'Vanguard Scientific Instruments in Management\n\n'; // Add the title at the beginning
-
+var text = '';
 var elements = document.querySelectorAll("div[id^='day']");
-var daysInfo = document.querySelectorAll("#days .item"); // Select weekday and day info
 
-// Loop through each element and parse the corresponding date
+// Loop through each element
 for (var i = 1; i < elements.length; i++) {
     // Get the inner text and split it into lines
     var lines = elements[i].innerText.split('\n');
     
-    // Extract the weekday and day (e.g., 'tuesday', '10 September') for the current element
-    var weekday = daysInfo[i - 1].querySelector('h4').innerText.trim();  // Extract the weekday
-    var dayInfo = daysInfo[i - 1].querySelector('h5').innerText.trim();  // Extract the day and month (e.g., '10 September')
-
-    // Add two empty lines before each day with the formatted day information
+    // Add two empty lines before each DAY* line
     if (i > 1) {
-        text += '\n\n'; // Ensure two empty lines before each new day
+        text += '\n\n'; // Ensure two empty lines before each DAY* line except for the first one
     }
-    text += weekday.charAt(0).toUpperCase() + weekday.slice(1) + ', ' + dayInfo + '\n\n'; // Capitalize the weekday and add date
+    text += elements[i].id.toUpperCase() + '\n\n'; // Add an additional blank line after the DAY* line
     
     // Iterate over each line, trimming it and appending non-empty lines to the text
     lines.forEach(function(line) {
@@ -1315,6 +1312,8 @@ function download(data, filename, type) {
     }
 }
 </script>
+
+
 
 		</body>
 </html>
