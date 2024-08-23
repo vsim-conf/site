@@ -1262,69 +1262,61 @@
 
 		</script>
 <script>
-// Event schedule downloader, from bace bogo :)
+// Event schedule downloader, from bace bogo :) and upgraded by Junior
+var text = 'Vanguard Scientific Instruments in Management\n\n';
 
-// Extract dates and weekdays from the calendar
-var days = document.querySelectorAll("#days .item");
-var calendar = [];
-days.forEach(function(day) {
-    var weekday = day.querySelector('h4').innerText.trim();
-    var date = day.querySelector('h5').innerText.trim();
-    calendar.push({ weekday: weekday, date: date });
-});
+// Extract the first date from the HTML structure
+var firstDayElement = document.querySelector("#days .item h4.uppercase");
+var firstDateElement = document.querySelector("#days .item h5");
 
-// Initialize the text with the title
-var text = 'VANGUARD SCIENTIFIC INSTRUMENTS IN MANAGEMENT\n\n';
+if (firstDayElement && firstDateElement) {
+    // Extract the weekday and date from the HTML
+    var firstWeekday = firstDayElement.innerText.trim();
+    var firstDate = firstDateElement.innerText.trim();
 
-var elements = document.querySelectorAll("div[id^='day']");
+    // Convert the date into a valid Date object
+    var [day, month] = firstDate.split(" ");
+    var monthIndex = new Date(Date.parse(month + " 1")).getMonth(); // Get the month index from the month name
+    var startDate = new Date(monthIndex, parseInt(day));
 
-// Loop through each day element and assign corresponding dates from the calendar
-for (var i = 0; i < elements.length; i++) {
-    // Get the inner text and split it into lines
-    var lines = elements[i].querySelectorAll('.time, .name, .description, p');
-
-    // Add the day ID with the corresponding calendar date and weekday
-    if (calendar[i]) { // Ensure we have a corresponding calendar date
-        text += calendar[i].weekday.toUpperCase() + ', ' + calendar[i].date + '\n\n';
-    } else {
-        text += elements[i].id.toUpperCase() + '\n\n'; // Fallback to DAY1, DAY2, etc.
+    // Function to format the date
+    function formatDate(date) {
+        var options = { weekday: 'long', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
     }
 
-    // Temporary storage for current time and location
-    var currentTime = '';
-    var currentLocation = '';
+    // Loop through each day element
+    var elements = document.querySelectorAll("div[id^='day']");
+    for (var i = 1; i < elements.length; i++) {
+        // Calculate the date for this day based on the start date
+        var currentDate = new Date(startDate);
+        currentDate.setDate(startDate.getDate() + (i - 1));
 
-    // Iterate over each line and trim leading/trailing spaces
-    lines.forEach(function(line) {
-        var trimmedText = line.innerText.trim(); // Trim all text
-        if (line.classList.contains('time')) {
-            currentTime = trimmedText;
-            text += '\n' + currentTime + ' '; // Add a space after the time
-        } else if (line.classList.contains('name')) {
-            currentLocation = trimmedText;
-            text += currentLocation + '\n'; // Combine time and location
-        } else if (line.classList.contains('description')) {
-            if (trimmedText) {
-                text += trimmedText + '\n'; // Add the description
+        // Get the inner text and split it into lines
+        var lines = elements[i].innerText.split('\n');
+        
+        // Add an additional blank line before each day and the formatted date with an empty line
+        text += '\n\n' + formatDate(currentDate) + '\n\n';
+        
+        // Iterate over each line, trimming it and appending non-empty lines to the text
+        for (var j = 0; j < lines.length; j++) {
+            var trimmedLine = lines[j].trim();
+            if (trimmedLine) {  // Only add non-empty lines
+                if (trimmedLine.match(/\d{1,2}\.\d{2}/) && j + 1 < lines.length) {
+                    // If the line contains time (e.g., 09.00 - 13.30) and the next line contains a location, move the location next to the time
+                    var nextLine = lines[j + 1].trim();
+                    if (nextLine.match(/The conference hall|The Lobby|The Restaurant|Hotels in Ravda|Various locations/)) {
+                        text += trimmedLine + ' ' + nextLine + '\n';
+                        j++;  // Skip the next line as it's already included
+                    } else {
+                        text += trimmedLine + '\n';
+                    }
+                } else {
+                    text += trimmedLine + '\n';
+                }
             }
-        } else if (line.tagName.toLowerCase() === 'p') {
-            // Handle paragraph with <u> and <br>
-            let innerHTML = line.innerHTML.trim();
-            
-            // Convert <u> to uppercase text
-            innerHTML = innerHTML.replace(/<u>(.*?)<\/u>/g, function(match, p1) {
-                return p1.toUpperCase();
-            });
-            
-            // Convert <br> to new lines
-            innerHTML = innerHTML.replace(/<br\s*\/?>/g, '\n');
-            
-            text += innerHTML.trim() + '\n'; // Add the processed paragraph text
         }
-    });
-
-    // Add an extra newline between sections for readability
-    text += '\n';
+    }
 }
 
 function download(data, filename, type) {
