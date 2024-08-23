@@ -1263,38 +1263,72 @@
 		</script>
 
 <script>
-// Event schedule downloader, from bace bogo :)
-var text = '';
+// Event schedule downloader, from bace bogo :), later upgraded by Junior
+
+// Extract dates and weekdays from the calendar
+var days = document.querySelectorAll("#days .item");
+var calendar = [];
+days.forEach(function(day) {
+    var weekday = day.querySelector('h4').innerText.trim();
+    var date = day.querySelector('h5').innerText.trim();
+    calendar.push({ weekday: weekday, date: date });
+});
+
+// Initialize the text with the title
+var text = 'VANGUARD SCIENTIFIC INSTRUMENTS IN MANAGEMENT\n\n';
+
 var elements = document.querySelectorAll("div[id^='day']");
 
-// Loop through each element
-for (var i = 1; i < elements.length; i++) {
-    // Get the inner HTML and parse it into DOM elements
-    var innerElements = elements[i].querySelectorAll('.time, .name');
-    
-    // Add the day ID with an empty line before it
-    if (i > 1) {
+// Loop through each day element and assign corresponding dates from the calendar
+for (var i = 0; i < elements.length; i++) {
+    // Get the inner text and split it into lines
+    var lines = elements[i].querySelectorAll('.time, .name, .description, p');
+
+    // Add the day ID with the corresponding calendar date and weekday
+    if (i > 0) {
         text += '\n'; // Ensure one empty line before each DAY* line except for the first one
     }
-    text += elements[i].id.toUpperCase() + '\n\n';
+    
+    if (calendar[i]) { // Check if the calendar has a corresponding date
+        text += calendar[i].weekday.toUpperCase() + ', ' + calendar[i].date + '\n\n';
+    } else {
+        text += elements[i].id.toUpperCase() + '\n\n'; // Fallback to DAY1, DAY2, etc.
+    }
 
-    var currentText = '';
+    // Temporary storage for current time and location
+    var currentTime = '';
+    var currentLocation = '';
 
-    // Iterate over each time and name element
-    innerElements.forEach(function(el) {
-        if (el.classList.contains('time')) {
-            // Append the time followed by a space
-            currentText += el.innerText + ' ';
-        } else if (el.classList.contains('name')) {
-            // Append the name after the time on the same line
-            currentText += el.innerText + '\n';
-            text += currentText;  // Write the full line with time and location to the text
-            currentText = '';     // Reset for the next entry
+    // Iterate over each line
+    lines.forEach(function(line) {
+        if (line.classList.contains('time')) {
+            currentTime = line.innerText.trim();
+            text += '\n' + currentTime; // Add an extra blank line before the time
+        } else if (line.classList.contains('name')) {
+            currentLocation = line.innerText.trim();
+            text += ' ' + currentLocation + '\n'; // Combine time and location
+        } else if (line.classList.contains('description')) {
+            var descriptionText = line.innerText.trim();
+            if (descriptionText) {
+                text += descriptionText + '\n'; // Add the description
+            }
+        } else if (line.tagName.toLowerCase() === 'p') {
+            // Handle paragraph with <u> and <br>
+            let innerHTML = line.innerHTML;
+            
+            // Convert <u> to uppercase text
+            innerHTML = innerHTML.replace(/<u>(.*?)<\/u>/g, function(match, p1) {
+                return p1.toUpperCase();
+            });
+            
+            // Convert <br> to new lines
+            innerHTML = innerHTML.replace(/<br\s*\/?>/g, '\n');
+            
+            text += innerHTML.trim() + '\n'; // Add the processed paragraph text
         }
     });
 }
 
-// Download function remains the same
 function download(data, filename, type) {
     var file = new Blob([data], {type: type});
     if (window.navigator.msSaveOrOpenBlob) // IE10+
@@ -1313,6 +1347,7 @@ function download(data, filename, type) {
     }
 }
 </script>
+
 
 		</body>
 </html>
