@@ -1263,25 +1263,29 @@
 
 		</script>
 
-       <script>
+      <script>
 // Event schedule downloader, from bace bogo :)
 var text = '';
 var elements = document.querySelectorAll("div[id^='day']");
 
+// Loop through each element
 for (var i = 1; i < elements.length; i++) {
     // Get the inner text and split it into lines
     var lines = elements[i].innerText.split('\n');
     
-    // Add the day ID to the text
+    // Add the day ID with an empty line before it
+    if (i > 1) {
+        text += '\n'; // Ensure one empty line before each DAY* line except for the first one
+    }
     text += elements[i].id.toUpperCase() + '\n\n';
     
-    // Iterate over each line, trimming it and appending it to the text
+    // Iterate over each line, trimming it and appending non-empty lines to the text
     lines.forEach(function(line) {
-        text += line.trim() + '\n';
+        var trimmedLine = line.trim();
+        if (trimmedLine) {  // Only add non-empty lines
+            text += trimmedLine + '\n';
+        }
     });
-    
-    // Add a blank line between sections for readability
-    text += '\n';
 }
 
 function download(data, filename, type) {
@@ -1302,6 +1306,7 @@ function download(data, filename, type) {
     }
 }
 </script>
+
 
 
 		</body>
