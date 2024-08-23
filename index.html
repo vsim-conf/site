@@ -1277,32 +1277,19 @@ if (firstDayElement && firstDateElement) {
     // Get the day and month from the firstDate (e.g., "10 September")
     var [day, month] = firstDate.split(" ");
 
-    // Create an array of months to use for date calculation
+    // Create an array of month and weekday names
     var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var monthIndex = monthNames.indexOf(month);
+    var weekdayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-    // Start date information without a year
-    var startDate = { day: parseInt(day), monthIndex: monthIndex };
-
-    // Function to format the date without the year
-    function formatDateWithoutYear(dateObj) {
-        return `${firstWeekday}, ${monthNames[dateObj.monthIndex]} ${dateObj.day}`;
-    }
+    // Convert the month and day to a valid Date object
+    var currentDate = new Date(2024, monthNames.indexOf(month), parseInt(day));
 
     // Loop through each day element
     var elements = document.querySelectorAll("div[id^='day']");
     for (var i = 0; i < elements.length; i++) {
-        // Calculate the current day based on the start date (simulating the passage of days)
-        var currentDate = { day: startDate.day + i, monthIndex: startDate.monthIndex };
-        
-        // Adjust the day and month if the day exceeds the month's length
-        if (currentDate.day > 30) { // assuming 30 days for simplicity
-            currentDate.day = currentDate.day - 30;
-            currentDate.monthIndex++;
-        }
-
-        // Add the formatted date without the year
-        text += formatDateWithoutYear(currentDate) + '\n\n';
+        // Format the date (weekday, month day) for the current element
+        var formattedDate = `${weekdayNames[currentDate.getDay()]}, ${monthNames[currentDate.getMonth()]} ${currentDate.getDate()}`;
+        text += formattedDate + '\n\n';
 
         // Get the inner text and split it into lines
         var lines = elements[i].innerText.split('\n');
@@ -1329,11 +1316,14 @@ if (firstDayElement && firstDateElement) {
                 }
             }
         }
+
+        // Increment the day by 1
+        currentDate.setDate(currentDate.getDate() + 1);
     }
 }
 
 function download(data, filename, type) {
-    var file = new Blob([data], {type: type});
+    var file = new Blob([data], { type: type });
     if (window.navigator.msSaveOrOpenBlob) // IE10+
         window.navigator.msSaveOrOpenBlob(file, filename);
     else { // Others
@@ -1343,10 +1333,10 @@ function download(data, filename, type) {
         a.download = filename;
         document.body.appendChild(a);
         a.click();
-        setTimeout(function() {
+        setTimeout(function () {
             document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
+            window.URL.revokeObjectURL(url);
+        }, 0);
     }
 }
 </script>
