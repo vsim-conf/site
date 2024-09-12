@@ -1,68 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>VSIM Conference Posters</title>
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/js/pdf.js"></script> <!-- Adjust path to your downloaded pdf.js -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vanguard Scientific Instruments in Management Poster Session</title>
+    <style>
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+            margin-bottom: 20px;
+        }
+        .pdf-container {
+            margin-bottom: 40px;
+        }
+    </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 text-center">
-                <h1 class="mt-5">VSIM Conference Posters</h1>
-                <p><a href="https://vsim-conf.info">Link back to the VSIM conference site</a></p>
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <td>
-                            <canvas id="pdf-canvas1" width="550px" height="400px"></canvas>
-                            <p>This browser is unable to display PDF file. <a href="/posters/poster1.pdf">Download</a> instead.</p>
-                        </td>
-                        <td>
-                            <canvas id="pdf-canvas2" width="550px" height="400px"></canvas>
-                            <p>This browser is unable to display PDF file. <a href="/posters/poster2.pdf">Download</a> instead.</p>
-                        </td>
-                    </tr>
-                    <!-- Add more rows and columns as needed -->
-                </table>
-            </div>
-        </div>
+    <h1>Vanguard Scientific Instruments in Management Poster Session</h1>
+<p><a href="https://vsim-cof.info">Return to VSIM website...</p>
+
+    <div class="pdf-container">
+        <h2>Poster 1</h2>
+        <iframe src="/posters/poster1.pdf"></iframe>
+        <a href="/posters/poster1.pdf" download="/posters/poster1.pdf">Download poster 1</a>
     </div>
 
-    <!-- Include jQuery -->
-    <script src="vendor/jquery/jquery.slim.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <div class="pdf-container">
+        <h2>Poster 2</h2>
+        <iframe src="/posters/poster2.pdf"></iframe>
+        <a href="/posters/poster2.pdf" download="/posters/poster2.pdf">Download poster 2</a>
+    </div>
 
-    <!-- PDF.js initialization script -->
-    <script>
-        function loadPDF(pdfURL, canvasId) {
-            var loadingTask = pdfjsLib.getDocument(pdfURL);
-            loadingTask.promise.then(function(pdf) {
-                pdf.getPage(1).then(function(page) {
-                    var scale = 1.0;
-                    var viewport = page.getViewport({ scale: scale });
+    <div class="pdf-container">
+        <h2>Poster 3</h2>
+        <iframe src="/posters/poster3.pdf"></iframe>
+        <a href="/posters/poster3.pdf" download="/posters/poster3.pdf">Download Poster 3</a>
+    </div>
 
-                    var canvas = document.getElementById(canvasId);
-                    var context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
+    <div class="pdf-container">
+        <h2>Poster 4</h2>
+        <iframe src="/posters/poster4.pdf"></iframe>
+        <a href="/posters/poster4.pdf" download="/posters/poster4.pdf">Download Poster 4</a>
+    </div>
 
-                    var renderContext = {
-                        canvasContext: context,
-                        viewport: viewport
-                    };
-                    page.render(renderContext);
-                });
-            });
-        }
+    <div class="pdf-container">
+        <h2>Poster 5</h2>
+        <iframe src="/posters/poster5.pdf"></iframe>
+        <a href="/posters/poster5.pdf" download="/posters/poster5.pdf">Download Poster 2</a>
+    </div>
 
-        // Load PDFs into canvases
-        pdfjsLib.GlobalWorkerOptions.workerSrc = '/js/pdf.worker.js'; // Adjust path to your downloaded pdf.worker.js
-        loadPDF('/posters/poster1.pdf', 'pdf-canvas1');
-        loadPDF('/posters/poster2.pdf', 'pdf-canvas2');
-    </script>
+    <!-- Repeat similar blocks for more PDFs -->
 
 </body>
 </html>
+
