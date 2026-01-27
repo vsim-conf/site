@@ -417,6 +417,25 @@ h4 {
     }
 }
 
+/* Fix for sponsor row alignment */
+
+/* Create a flexbox container for the logos to align them vertically */
+.speaker .logo-container {
+    display: flex !important;       /* Overrides the default 'table' display */
+    align-items: center;            /* Centers image vertically */
+    justify-content: center;        /* Centers image horizontally */
+    height: 160px;                  /* Fixed height ensures all logos share the same baseline */
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+/* Ensure images don't overflow the fixed height container */
+.speaker .logo-container img {
+    max-height: 140px;             /* Leaves a little padding inside the container */
+    width: auto;                   /* Maintains aspect ratio */
+    max-width: 100%;
+    margin: 0 auto;
+}
 
 /* SCHEDULE */
 
