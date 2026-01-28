@@ -301,11 +301,14 @@ h4 {
 
 /* SPEAKER */
 
+/*
 .speaker {
 	margin-bottom:30px;
 	min-height: 280px; /* Forces consistent height so floated elements don't get stuck */
     text-align: center; /* Ensures text is centered in the wider slot */
 }
+
+*/
 
 .speaker img {
 	width:100%;
@@ -406,8 +409,10 @@ h4 {
 #speaker-detail i {
 	vertical-align:middle;
 }
-	
+
+
 /* On larger screens, handle the wrapping of the 6 items (now 4 items + 2 items) gracefully */
+/*
 @media (min-width: 1200px) {
     /* Target the specific row by its new offset class if needed, 
        or just rely on the standard float behavior. 
@@ -416,10 +421,11 @@ h4 {
         clear: left;
     }
 }
-
+*/
 /* Fix for sponsor row alignment */
 
 /* Create a flexbox container for the logos to align them vertically */
+/*
 .speaker .logo-container {
     display: flex !important;       /* Overrides the default 'table' display */
     align-items: center;            /* Centers image vertically */
@@ -428,14 +434,17 @@ h4 {
     margin-bottom: 15px;
     width: 100%;
 }
+*/
 
 /* Ensure images don't overflow the fixed height container */
+/*
 .speaker .logo-container img {
     max-height: 140px;             /* Leaves a little padding inside the container */
     width: auto;                   /* Maintains aspect ratio */
     max-width: 100%;
     margin: 0 auto;
 }
+*/
 
 /* SCHEDULE */
 
